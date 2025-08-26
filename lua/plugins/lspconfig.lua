@@ -9,9 +9,10 @@ return {
         exclude = { "c", "cpp" },
       },
       autoformat = false,
-      setup = {
+      server = {
         clangd = function(_, opts)
-          opts.cmd = { "clangd", "--header-insertion=never" }
+          opts.mason = false
+          opts.cmd = { "clangd", "--header-insertion=never", "--background-index", "--clang-tidy"}
         end,
         -- -- 可选：关闭 clangd 的代码片段功能（避免自动展开）
         -- capabilities = {
