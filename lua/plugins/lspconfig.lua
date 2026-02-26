@@ -1,30 +1,39 @@
+local clangd_cmd = {
+    "clangd",
+    "--background-index",
+    "--clang-tidy",
+    "--log=verbose",
+}
+
 return {
-  {
-    "neovim/nvim-lspconfig",
-    optional = true,
-    lazy = false,
-    opts = {
-      inlay_hints = {
-        enable = false,
-        exclude = { "c", "cpp" },
-      },
-      autoformat = false,
-      server = {
-        clangd = function(_, opts)
-          opts.mason = false
-          opts.cmd = { "clangd", "--header-insertion=never", "--background-index", "--clang-tidy"}
-        end,
-        -- -- 可选：关闭 clangd 的代码片段功能（避免自动展开）
-        -- capabilities = {
-        --   textDocument = {
-        --     completion = {
-        --       completionItem = {
-        --         snippetSupport = false,
-        --       },
-        --     },
-        --   },
-        -- },
-      },
+    {
+        "neovim/nvim-lspconfig",
+        opts = {
+            inlay_hints = { enabled = false },
+            servers = {
+                clangd = {
+                    mason = false,
+                    cmd = clangd_cmd,
+                },
+                lua_ls = {
+                    mason = true,
+                    settings = {
+                        Lua = {
+                            workspace = {
+                                library = {
+                                    vim.fn.expand(
+                                        vim.g.home .. "/share/lua-language-server/LLS-Addons/addons/xmake/module/library"
+                                    ),
+                                },
+                                checkThirdParty = false,
+                            },
+                            diagnostics = {
+                                globals = { "xmake", "target", "set_kind", "add_files" },
+                            },
+                        },
+                    },
+                },
+            },
+        },
     },
-  },
 }

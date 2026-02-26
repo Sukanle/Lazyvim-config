@@ -1,0 +1,11 @@
+{
+	"contributes": {
+		"snippets": [
+			{
+				"language": "all",
+				"path": "./all/paths.json"
+			}
+		]
+	},
+	"name": "skl-snippets"
+}

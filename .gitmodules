@@ -1,0 +1,3 @@
+[submodule "share/lua-language-server/LLS-Addons"]
+	path = share/lua-language-server/LLS-Addons
+	url = https://github.com/LuaLS/LLS-Addons.git

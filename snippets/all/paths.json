@@ -1,0 +1,37 @@
+{
+    "filename": {
+        "prefix": ["fname", "filename"],
+        "body": [
+            "$TM_FILENAME"
+        ],
+        "description": "The filename of the current document"
+    },
+    "filename-base": {
+        "prefix": ["bname", "basename"],
+        "body": [
+            "$TM_FILENAME_BASE"
+        ],
+        "description": "The filename of the current document without its extension"
+    },
+    "absolute-filepath": {
+        "prefix": ["apath"],
+        "body": [
+            "$TM_FILEPATH"
+        ],
+        "description": "The full file path of the current document"
+    },
+    "relative-filepath": {
+        "prefix": ["rpath"],
+        "body": [
+            "$RELATIVE_FILEPATH"
+        ],
+        "description": "The relative (to the opened workspace or folder) file path of the current document"
+    },
+    "current-path": {
+        "prefix": ["pwd", "cpath"],
+        "body": [
+            "$TM_DIRECTORY"
+        ],
+        "description": "The directory of the current document"
+    }
+}

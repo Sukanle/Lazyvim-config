@@ -8,18 +8,22 @@
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "lua" },
-  callback = function()
-    vim.opt_local.expandtab = true
-    vim.opt_local.tabstop = 2
-    vim.opt_local.shiftwidth = 2
-    vim.opt_local.softtabstop = 2
-  end,
+    pattern = { "markdown", "txt" },
+    callback = function()
+        vim.opt_local.spell = false
+    end,
 })
 
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "markdown", "txt" },
-  callback = function()
-    vim.opt_local.spell = false
-  end,
+vim.api.nvim_create_autocmd("BufAdd", {
+    callback = function()
+        local bufs = vim.fn.getbufinfo({ buflisted = 1 })
+        if #bufs > 10 then
+            for _, buf in ipairs(bufs) do
+                if buf.bufnr ~= vim.api.nvim_get_current_buf() then
+                    vim.cmd("bdelete " .. buf.bufnr)
+                    break
+                end
+            end
+        end
+    end,
 })
