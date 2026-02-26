@@ -1,0 +1,183 @@
+# 共同设置
+# 补全配置
+Completion:
+  AllScopes: No
+  ArgumentLists: None
+  HeaderInsertion: Never
+  CodePatterns: All
+
+# 索引与编译器
+Index:
+  Background: Build
+
+# 注释文档
+Documentation:
+  CommentFormat: Doxygen
+
+CompileFlags:
+  Add: 
+    - -Wall
+    - -Wextra
+    - -Wno-unused-parameter
+    - -I/usr/local/include
+    - -I/Users/sukanle/Documents/include
+    - -Iinclude
+
+Diagnostics:
+  ClangTidy:
+    Add: ["*"]
+    Remove:
+      # === 禁用 C++ 强制风格（因可能被 C 使用）===
+      - modernize-deprecated-headers
+      - hicpp-deprecated-headers
+      # === 禁用过度严格的风格约束 ===
+      - google-objc-global-variable-declaration
+      - readability-braces-around-statements  # 允许单行 if/for 无花括号
+      - hicpp-braces-around-statements
+      - readability-identifier-length         # 允许 i, x, y, it 等
+      - readability-magic-numbers             # 数学/图形代码中常见
+      - cppcoreguidelines-avoid-magic-numbers
+      - readability-implicit-bool-conversion  # 允许if (ptr)
+
+      # === 禁用过度严格的风格约束 ===
+      - google-objc-global-variable-declaration
+      - readability-braces-around-statements  # 允许单行 if/for 无花括号
+      - hicpp-braces-around-statements
+      - readability-identifier-length         # 允许 i, x, y, it 等
+      - readability-magic-numbers             # 数学/图形代码中常见
+      - cppcoreguidelines-avoid-magic-numbers
+      - readability-implicit-bool-conversion  # 允许if (ptr)
+
+      # === 允许公有成员（POD、数据结构）===
+      - misc-non-private-member-variables-in-classes
+
+      # === 禁用宏替换强制（某些场景宏更合适）===
+      - cppcoreguidelines-macro-usage
+
+      # === 禁用 union/类型双关警告（系统/图形编程需要）===
+      - cppcoreguidelines-pro-type-union-access
+
+      # === 允许 __ 开头的变量、类型、函数名（编写库需要）===
+      - bugprone-reserved-identifier
+
+      # === 禁用平台/组织规则 ===
+      - abseil-*
+      - fuchsia-*
+      - llvm-*
+      - llvmlibc-*
+      - zircon-*
+      - altera-*
+      - google-*
+      - darwin-*
+      - android-*
+
+---
+# 专为现代 C++（C++17/20/23）优化
+If:
+  PathMatch:
+    - .*\.hpp
+    - .*\.cpp
+    - .*\.cxx
+    - .*\.cc
+
+CompileFlags:
+  Add: 
+    # 可调整为 -std=c++17 或 c++23
+    - -std=c++20
+    - -Wall
+    - -Wextra
+    - -Wno-unused-parameter
+    - -I/usr/local/include
+    - -I/Users/sukanle/Documents/include
+    - -Iinclude
+  Compiler: clang++
+
+Diagnostics:
+  ClangTidy:
+    Remove:
+      # === 保留 modernize-*（C++ 推荐），但禁用争议项 ===
+      - modernize-use-trailing-return-type    # 可读性有争议，非必要
+      - modernize-pass-by-value               # 有时性能更好，但需权衡
+
+      # === 其他 ===
+      - cert-dcl37-c          # C 专用，C++ 中无意义
+
+---
+
+# 专为 C/C++ 共用的头文件优化
+If:
+  PathMatch: 
+    - .*\.h
+    - .*\.c
+
+# 索引与编译器
+Index:
+  Background: Build
+
+# 注释文档
+Documentation:
+  CommentFormat: Doxygen
+
+CompileFlags:
+  Add: 
+    - -Wall
+    - -Wextra
+    - -Wno-unused-parameter
+    - -I/usr/local/include
+    - -I/Users/sukanle/Documents/include
+    - -I./include
+  # 不指定 -std，由包含它的源文件决定
+  Compiler: clang++
+
+Diagnostics:
+  ClangTidy:
+    Remove:
+      # === 禁用 C++ 强制风格（因可能被 C 使用）===
+      - modernize-use-nullptr                 # C 无 nullptr
+      - modernize-use-auto
+      - modernize-use-using
+      - modernize-use-trailing-return-type
+
+      # === 禁用 C++ 类型转换警告 ===
+      - google-readability-casting
+      - cppcoreguidelines-pro-type-c-style-cast
+      - cppcoreguidelines-pro-type-reinterpret-cast
+
+      # === 其他 ===
+      - cert-dcl37-c
+      - cert-dcl51-cpp
+
+---
+
+# 专为 C 语言优化
+If:
+  PathMatch: [.*\.c]
+# 索引与编译器
+Index:
+  Background: Build
+
+# 注释文档
+Documentation:
+  CommentFormat: Doxygen
+
+CompileFlags:
+  Add: 
+    - -std=c11
+    - -Wall
+    - -Wextra
+    - -Wno-unused-parameter
+    - -I/usr/local/include
+    - -I/Users/sukanle/Documents/include
+    - -I./include
+  Compiler: clang
+
+Diagnostics:
+  ClangTidy:
+    Remove:
+      # === 完全禁用 C++ 特有检查 ===
+      - modernize-*                     # 所有 modernize 都是 C++ 导向
+      - cppcoreguidelines-*             # C++ Core Guidelines
+      - hicpp-*                         # High Integrity C++，不适用于 C
+
+      # === 禁用不适用于 C 的检查 ===
+      - misc-use-internal-linkage         # C 常用 static 函数，不应警告

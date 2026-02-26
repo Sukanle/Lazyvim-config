@@ -5,6 +5,21 @@ local clangd_cmd = {
     "--log=verbose",
 }
 
+local share_path = vim.g.home .. "/share/clang-extern-tools/"
+local home_dir
+if vim.g.os.sysname == "Windows_NT" then
+    home_dir = vim.env.LOCALAPPDATA .. "\\clangd\\"
+elseif vim.g.os.sysname == "Darwin" then
+    home_dir = vim.env.HOME .. "/Library/Preferences/clangd/"
+else
+    home_dir = vim.env.HOME .. "/clangd/"
+end
+
+local file_sync = require("utils.file_sync")
+file_sync.sync_symlink_if_newr(share_path .. "config.yaml", home_dir .. "config.yaml")
+-- file_sync.sync_symlink_if_newr(share_path .. ".clang-format", home_dir .. ".clang-format")
+
+
 return {
     {
         "neovim/nvim-lspconfig",

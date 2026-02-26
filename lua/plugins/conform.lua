@@ -1,5 +1,19 @@
 -- lua/plugins/formatter.lua
-local M = {
+local file_sync = require("utils.file_sync")
+
+local share_path = vim.g.home .. "/share/clang-extern-tools/"
+local home_dir
+if vim.g.os.sysname == "Windows_NT" then
+    home_dir = vim.env.LOCALAPPDATA .. "\\clangd"
+elseif vim.g.os.sysname == "Darwin" then
+    home_dir = vim.env.HOME .. "/Library/Preferences/clangd"
+else
+    home_dir = vim.env.HOME .. "/clangd"
+end
+
+file_sync.sync_symlink_if_newr(share_path .. ".clang-format", home_dir .. "/.clang-format")
+
+return {
     {
         "stevearc/conform.nvim",
         optional = true,
@@ -13,18 +27,7 @@ local M = {
                 clang_format = {
                     command = "clang-format",
                     args = function()
-                        local vim = vim
-
                         -- 构建主目录路径
-                        local home_dir
-                        if vim.g.os == "Windows" then
-                            home_dir = vim.env.LOCALAPPDATA .. "\\clangd"
-                        elseif vim.g.os == "MacOS" then
-                            home_dir = vim.env.HOME .. "/Library/Preferences/clangd"
-                        else
-                            home_dir = vim.env.HOME .. "/clangd"
-                        end
-
                         -- 检查当前工作目录是否存在 .clang-format
                         local cwd_config = vim.fn.getcwd() .. "/.clang-format"
                         if vim.fn.filereadable(cwd_config) == 1 then
@@ -45,5 +48,3 @@ local M = {
         },
     },
 }
-
-return M
