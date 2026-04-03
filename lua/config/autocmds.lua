@@ -14,6 +14,13 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
+vim.api.nvim_create_autocmd("BufRead", {
+    pattern = "*.def",
+    callback = function()
+        vim.bo.filetype = "c" -- 或 "cpp"
+    end,
+})
+
 vim.api.nvim_create_autocmd("BufAdd", {
     callback = function()
         local bufs = vim.fn.getbufinfo({ buflisted = 1 })

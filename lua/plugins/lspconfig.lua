@@ -17,7 +17,6 @@ end
 
 local file_sync = require("utils.file_sync")
 file_sync.sync_symlink_if_newr(share_path .. "config.yaml", home_dir .. "config.yaml")
--- file_sync.sync_symlink_if_newr(share_path .. ".clang-format", home_dir .. ".clang-format")
 
 
 return {

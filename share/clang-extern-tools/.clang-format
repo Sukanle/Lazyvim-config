@@ -54,7 +54,7 @@ SortIncludes: true
 SortUsingDeclarations: true
 
 # 指针和引用的对齐: Left, Right, Middle
-PointerAlignment: Left
+PointerAlignment: Right
 
 # 限定符对其风格: Left, Right, Middle
 QualifierAlignment: Left

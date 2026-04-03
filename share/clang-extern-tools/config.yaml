@@ -39,15 +39,6 @@ Diagnostics:
       - cppcoreguidelines-avoid-magic-numbers
       - readability-implicit-bool-conversion  # 允许if (ptr)
 
-      # === 禁用过度严格的风格约束 ===
-      - google-objc-global-variable-declaration
-      - readability-braces-around-statements  # 允许单行 if/for 无花括号
-      - hicpp-braces-around-statements
-      - readability-identifier-length         # 允许 i, x, y, it 等
-      - readability-magic-numbers             # 数学/图形代码中常见
-      - cppcoreguidelines-avoid-magic-numbers
-      - readability-implicit-bool-conversion  # 允许if (ptr)
-
       # === 允许公有成员（POD、数据结构）===
       - misc-non-private-member-variables-in-classes
 
@@ -98,6 +89,9 @@ Diagnostics:
       # === 保留 modernize-*（C++ 推荐），但禁用争议项 ===
       - modernize-use-trailing-return-type    # 可读性有争议，非必要
       - modernize-pass-by-value               # 有时性能更好，但需权衡
+
+      # === 保留 bugprone-*（C++ 推荐），但禁用争议项 ===
+      - bugprone-easily-swappable-parameters
 
       # === 其他 ===
       - cert-dcl37-c          # C 专用，C++ 中无意义
