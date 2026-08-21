@@ -11,6 +11,9 @@ Standard: Latest
 # tab宽度
 TabWidth: 4
 
+# 预处理缩进宽度
+PPIndentWidth: 2
+
 # 使用tab字符: Never, ForIndentation, ForContinuationAndIndentation, Always
 UseTab: Never
 
@@ -143,9 +146,11 @@ ContinuationIndentWidth: 4
 # 缩进case标签
 IndentCaseLabels: true
 
-MacroBlockBegin: "^(BEGIN_.*|.*_BEGIN)$"         # 匹配 BEGIN_xxx 或 xxx_BEGIN
-MacroBlockEnd: "^(END_.*|.*_END)$"               # 匹配 END_xxx 或 xxx_END
-IndentPPDirectives: None                         # 宏块内部不缩进预处理指令
+# 缩进宏块正则
+MacroBlockBegin: "^(?!.*NAMESPACE)(BEGIN_.*|.*_BEGIN)$"      # 匹配 BEGIN_xxx 或 xxx_BEGIN
+MacroBlockEnd:   "^(?!.*NAMESPACE)(END_.*|.*_END)$"          # 匹配 END_xxx 或 xxx_END    
+# 缩进预处理器
+IndentPPDirectives: AfterHash                    # 缩进#后的指令
 
 # 缩进宽度
 IndentWidth: 4
