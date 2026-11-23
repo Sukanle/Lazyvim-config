@@ -99,6 +99,7 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 | Lua | lua_ls | 通过 Mason 安装，包含 xmake 定义 |
 
 clangd 和 clang-format 的共享配置会通过 `lua/utils/clangd.lua` 软链接到 `~/.config/clangd/`。
+Rust 的 `'`（生命周期）在 `after/ftplugin/rust.lua` 中禁用 mini.pairs 自动配对。
 
 ### 调试
 
