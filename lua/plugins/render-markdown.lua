@@ -139,6 +139,16 @@ return {
             latex = {
                 converter = { "utftex", "latex2text" },
             },
+            win_options = {
+                conceallevel = {
+                    default = 0,
+                    rendered = 3,
+                },
+                concealcursor = {
+                    default = "",
+                    rendered = "",
+                },
+            },
             overrides = {
                 filetype = {
                     markdown = {

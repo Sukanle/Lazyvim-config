@@ -129,6 +129,7 @@ Rust 的 `'`（生命周期）在 `after/ftplugin/rust.lua` 中禁用 mini.pairs
 - Noice 通知改用 `nvim-notify` 后端，使用 `fade_in_slide_out` 动画。
 - `nvim-notify` 的 `Notify*Body` / `NotifyBackground` 背景在 `transparent.lua` 中清空，保持通知透明。
 - Markdown 源文件默认不渲染；`<leader>md` 打开右侧只读预览，并跟随活动 Markdown buffer。
+- Markdown 源文件使用 `conceallevel=0`，不隐藏 `*` 等标记；预览 buffer 使用 `conceallevel=3`。
 - 配色使用 LazyVim 默认的 tokyonight moon。
 - 透明背景通过 transparent.nvim 处理。
 
