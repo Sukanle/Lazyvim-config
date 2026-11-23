@@ -133,6 +133,7 @@ clangd 和 clang-format 的共享配置会通过 `lua/utils/file_sync.lua` 软�
 - 活动窗口：`colorful-winsep.nvim` 在窗口边界绘制 `╭─╮` 圆角边框
 - which-key：单独启用 `border = "rounded"`
 - Lazy 插件管理 / LazyExtras：`lazy.nvim` 的 `ui.border = "rounded"`，并使用 `backdrop = false`
+- LazyVim 更新日志（`<leader>L`）：Snacks `news` 样式增加 `border = "rounded"`
 - Snacks picker、Blink、LSP hover 等继承 `winborder`
 
 对应配置在：
@@ -144,6 +145,7 @@ lua/plugins/lualine.lua
 lua/plugins/bufferline.lua
 lua/plugins/which-key.lua
 lua/plugins/colorful-winsep.lua
+lua/plugins/snacks.lua
 ```
 
 ### I18N 适配
