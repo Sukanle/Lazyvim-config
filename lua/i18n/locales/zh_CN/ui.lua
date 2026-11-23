@@ -20,4 +20,13 @@ return {
     ["SHELL"] = "Shell",
     ["TERMINAL"] = "终端",
     ["O-PENDING"] = "操作待定",
+
+    -- Noice cmdline 标题
+    ["Search Down"] = "向下搜索",
+    ["Search Up"] = "向上搜索",
+    ["Filter"] = "过滤",
+    ["Lua"] = "Lua",
+    ["Help"] = "帮助",
+    ["Calculator"] = "计算器",
+    ["Input"] = "输入",
 }
