@@ -7,6 +7,14 @@ return {
             component_separators = { left = "", right = "" },
         },
         sections = {
+            lualine_a = {
+                {
+                    "mode",
+                    fmt = function(mode)
+                        return require("i18n").tr(mode)
+                    end,
+                },
+            },
             lualine_c = {},
             lualine_x = {},
         },
