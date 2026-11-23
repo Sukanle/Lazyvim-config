@@ -20,9 +20,12 @@
 ```sh
 git clone git@github.com:Sukanle/Lazyvim-config.git ~/.config/nvim
 cd ~/.config/nvim
-git submodule update --init --recursive
+git submodule update --init share/lua-language-server/LLS-Addons
+git -C share/lua-language-server/LLS-Addons submodule update --init addons/xmake/module
 nvim
 ```
+
+只初始化 xmake 补全所需的嵌套子模块，`LLS-Addons` 中的其他 addon 不会下载。
 
 首次启动会自动安装插件。之后按需执行：
 
