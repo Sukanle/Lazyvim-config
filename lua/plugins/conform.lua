@@ -8,7 +8,11 @@ if vim.g.os.sysname == "Windows_NT" then
 elseif vim.g.os.sysname == "Darwin" then
     home_dir = vim.env.HOME .. "/Library/Preferences/clangd"
 else
-    home_dir = vim.env.HOME .. "/clangd"
+    if not vim.env.XDG_CONFIG_HOME or vim.env.XDG_CONFIG_HOME == "" then
+        home_dir = vim.env.HOME .. "/.config/clangd/"
+    else
+        home_dir = vim.env.XDG_CONFIG_HOME .. "/clangd/"
+    end
 end
 
 file_sync.sync_symlink_if_newr(share_path .. ".clang-format", home_dir .. "/.clang-format")
@@ -19,9 +23,10 @@ return {
         optional = true,
         opts = {
             formatters_by_ft = {
-                c = { "clang_format" },
-                cpp = { "clang_format" },
+                ["c"] = { "clang_format" },
+                ["cpp"] = { "clang_format" },
                 ["c++"] = { "clang_format" },
+                ["rust"] = { "rustfmt" },   -- 新增
             },
             formatters = {
                 clang_format = {

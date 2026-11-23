@@ -19,9 +19,10 @@ CompileFlags:
     - -Wall
     - -Wextra
     - -Wno-unused-parameter
-    - -I/usr/local/include
-    - -I/Users/sukanle/Documents/include
     - -Iinclude
+  Remove:
+    - -m*
+    - -f*
 
 Diagnostics:
   ClangTidy:
@@ -35,9 +36,12 @@ Diagnostics:
       - readability-braces-around-statements  # 允许单行 if/for 无花括号
       - hicpp-braces-around-statements
       - readability-identifier-length         # 允许 i, x, y, it 等
+      - readability-inconsistent-ifelse-braces
       - readability-magic-numbers             # 数学/图形代码中常见
       - cppcoreguidelines-avoid-magic-numbers
+      - readability-use-std-min-max
       - readability-implicit-bool-conversion  # 允许if (ptr)
+      - cppcoreguidelines-pro-bounds-avoid-unchecked-container-access
 
       # === 允许公有成员（POD、数据结构）===
       - misc-non-private-member-variables-in-classes
@@ -78,8 +82,6 @@ CompileFlags:
     - -Wall
     - -Wextra
     - -Wno-unused-parameter
-    - -I/usr/local/include
-    - -I/Users/sukanle/Documents/include
     - -Iinclude
   Compiler: clang++
 
@@ -117,8 +119,6 @@ CompileFlags:
     - -Wall
     - -Wextra
     - -Wno-unused-parameter
-    - -I/usr/local/include
-    - -I/Users/sukanle/Documents/include
     - -I./include
   # 不指定 -std，由包含它的源文件决定
   Compiler: clang++
@@ -156,13 +156,11 @@ Documentation:
 
 CompileFlags:
   Add: 
-    - -std=c11
+    - -std=c23
     - -Wall
     - -Wextra
     - -Wno-unused-parameter
-    - -I/usr/local/include
-    - -I/Users/sukanle/Documents/include
-    - -I./include
+    - -Iinclude
   Compiler: clang
 
 Diagnostics:
