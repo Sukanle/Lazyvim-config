@@ -63,6 +63,7 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │   │   ├── yazi.lua             # 文件管理器
 │   │   ├── bufferline.lua       # buffer 标签栏
 │   │   ├── lualine.lua          # 状态栏
+│   │   ├── noice.lua            # Noice cmdline 标题本地化
 │   │   └── transparent.lua      # 透明背景
 │   ├── i18n/
 │   │   ├── init.lua             # locale 检测、词表加载、tr()
@@ -160,7 +161,8 @@ lua/plugins/snacks.lua
   - `keymap.lua`：拦截 `nvim_set_keymap` / `nvim_buf_set_keymap`，翻译快捷键 `desc`
   - `which-key.lua`：包装 `which-key.view.replace` 和 `which-key.text.append`
   - `snacks.lua`：包装 picker 标题模板和 dashboard 渲染
-  - `lualine.lua`：包装 `lualine.utils.mode.get_mode`，翻译 NORMAL / COMMAND 等模式名
+- `lualine` 的模式名通过 `lualine_a.fmt` 翻译，保持原始 `get_mode()` 供主题选择颜色
+- `noice` 的 cmdline 标题在 `lua/plugins/noice.lua` 中本地化
 - `locales/zh_CN/`：按模块分布式管理词表，可以继续添加 `.lua` 文件，加载时自动合并。
   - `ui.lua`：模式名等内置 UI 文本
   - `keymaps.lua`：快捷键描述
