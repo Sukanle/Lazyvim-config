@@ -34,8 +34,6 @@ nvim
 
 Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 `:TSInstall zig`。
 
-> `LLS-Addons` 中个别第三方 addon 的上游仓库已经失效，执行递归初始化时可能出现克隆失败提示；这不影响本项目使用的 `xmake` 模块。
-
 ## 目录结构
 
 ```text
