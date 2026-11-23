@@ -16,7 +16,13 @@ if vim.fn.exists("g:os") == 0 then
             vim.opt.shell = "cmd.exe"
         end
     else
-        vim.opt.shell = vim.fn.executable("zsh") == 1 and "zsh" or "bash"
+        if vim.fn.executable("fish") == 1 then
+            vim.opt.shell = "fish"
+        elseif vim.fn.executable("zsh") == 1 then
+            vim.opt.shell = "zsh"
+        else
+            vim.opt.shell = "bash"
+        end
     end
 end
 
@@ -26,4 +32,6 @@ if not vim.env.XDG_CONFIG_HOME or vim.env.XDG_CONFIG_HOME == "" then
     else
         vim.g.home = vim.env.HOME .. "/.config/nvim"
     end
+else
+    vim.g.home = vim.env.XDG_CONFIG_HOME .. "/nvim"
 end
