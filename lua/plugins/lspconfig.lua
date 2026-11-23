@@ -5,22 +5,8 @@ local clangd_cmd = {
     "--compile-commands-dir=build",
 }
 
-local share_path = vim.g.home .. "/share/clang-extern-tools/"
-local home_dir
-if vim.g.os.sysname == "Windows_NT" then
-    home_dir = vim.env.LOCALAPPDATA .. "\\clangd\\"
-elseif vim.g.os.sysname == "Darwin" then
-    home_dir = vim.env.HOME .. "/Library/Preferences/clangd/"
-else
-    if not vim.env.XDG_CONFIG_HOME or vim.env.XDG_CONFIG_HOME == "" then
-        home_dir = vim.env.HOME .. "/.config/clangd/"
-    else
-        home_dir = vim.env.XDG_CONFIG_HOME .. "/clangd/"
-    end
-end
-
-local file_sync = require("utils.file_sync")
-file_sync.sync_symlink_if_newr(share_path .. "config.yaml", home_dir .. "config.yaml")
+local clangd = require("utils.clangd")
+clangd.setup()
 
 return {
     {

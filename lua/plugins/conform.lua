@@ -1,21 +1,6 @@
 -- lua/plugins/formatter.lua
-local file_sync = require("utils.file_sync")
-
-local share_path = vim.g.home .. "/share/clang-extern-tools/"
-local home_dir
-if vim.g.os.sysname == "Windows_NT" then
-    home_dir = vim.env.LOCALAPPDATA .. "\\clangd"
-elseif vim.g.os.sysname == "Darwin" then
-    home_dir = vim.env.HOME .. "/Library/Preferences/clangd"
-else
-    if not vim.env.XDG_CONFIG_HOME or vim.env.XDG_CONFIG_HOME == "" then
-        home_dir = vim.env.HOME .. "/.config/clangd/"
-    else
-        home_dir = vim.env.XDG_CONFIG_HOME .. "/clangd/"
-    end
-end
-
-file_sync.sync_symlink_if_newr(share_path .. ".clang-format", home_dir .. "/.clang-format")
+local clangd = require("utils.clangd")
+clangd.setup()
 
 return {
     {
@@ -26,7 +11,7 @@ return {
                 ["c"] = { "clang_format" },
                 ["cpp"] = { "clang_format" },
                 ["c++"] = { "clang_format" },
-                ["rust"] = { "rustfmt" },   -- 新增
+                ["rust"] = { "rustfmt" }, -- 新增
             },
             formatters = {
                 clang_format = {
@@ -40,7 +25,7 @@ return {
                         end
 
                         -- 检查用户主目录是否存在 .clang-format
-                        local home_config = home_dir .. "/.clang-format"
+                        local home_config = vim.fs.joinpath(clangd.home_dir, ".clang-format")
                         if vim.fn.filereadable(home_config) == 1 then
                             return { "-style=file:" .. home_config }
                         end
