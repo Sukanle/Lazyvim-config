@@ -11,7 +11,7 @@ return {
             stages = "fade_in_slide_out",
             timeout = 3000,
             max_width = 60,
-            render = "compact",
+            render = "default",
             background_colour = background,
         }
     end,

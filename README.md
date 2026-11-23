@@ -120,6 +120,7 @@ clangd 和 clang-format 的共享配置会通过 `lua/utils/file_sync.lua` 软�
 - bufferline + snacks picker + lualine。
 - 状态栏有意保持极简，`lualine_c` 和 `lualine_x` 留空。
 - Noice 通知改用 `nvim-notify` 后端，使用 `fade_in_slide_out` 动画。
+- `nvim-notify` 的 `Notify*Body` / `NotifyBackground` 背景在 `transparent.lua` 中清空，保持通知透明。
 - 配色使用 LazyVim 默认的 tokyonight moon。
 - 透明背景通过 transparent.nvim 处理。
 
