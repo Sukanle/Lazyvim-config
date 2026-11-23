@@ -119,11 +119,11 @@ clangd 和 clang-format 的共享配置会通过 `lua/utils/file_sync.lua` 软�
 - 配色使用 LazyVim 默认的 tokyonight moon。
 - 透明背景通过 transparent.nvim 处理。
 
-### 中文适配
+### I18N 适配
 
-`lua/i18n/` 是一个轻量本地化层，参考 `~/.config/hypr/locales` 的“英文原文 -> 译文”模式：
+`lua/i18n/` 是一个轻量本地化层，使用 `英文原文 -> 译文` 模式：
 
-- `init.lua`：按 `vim.g.i18n_locale` > `LC_ALL` > `LC_MESSAGES` > `LANG` 选择语言，加载词表，提供 `require("i18n").tr()`。
+- `init.lua`：默认 `locale = "auto"`，按 `LC_ALL` > `LC_MESSAGES` > `LANG` 自动检测；也可以通过 `vim.g.i18n_locale` 手动指定。`en` / `en_US` / `en_UK` / `C` / `POSIX` 会直接使用英文原文，跳过词表加载和 hook。加载词表后提供 `require("i18n").tr()`。
 - `hooks.lua`：通用 hook 接口：
   - `hooks.watch(module, callback)`：等模块被真正加载后再执行回调，不会提前 `require` 插件
   - `hooks.wrap(module, method, make)`：包装插件方法，并自动记录撤销函数
@@ -134,9 +134,10 @@ clangd 和 clang-format 的共享配置会通过 `lua/utils/file_sync.lua` 软�
   - `snacks.lua`：包装 picker 标题模板和 dashboard 渲染
 - `locales/zh_CN/`：按模块分布式管理词表，可以继续添加 `.lua` 文件，加载时自动合并。
 
-新增词条时，在 `locales/zh_CN/` 下任意文件里添加映射即可：
+新增词条时，在 `locales/xx_YY/` 下任意文件里添加映射即可：
 
 ```lua
+-- 简体中文示例
 return {
     ["Find Files"] = "查找文件",
 }
@@ -160,25 +161,37 @@ return {
 }
 ```
 
-没有对应词条时自动回退英文。新增语言时创建 `locales/<locale>/` 目录即可，例如 `locales/en/`。
+没有对应词条时自动回退英文。新增语言时创建 `locales/<locale>/` 目录即可，例如 `locales/zh_TS/`。
 
-临时关闭中文适配：
+默认自动检测：
+
+```lua
+vim.g.i18n_locale = "auto"
+```
+
+手动指定中文：
+
+```lua
+vim.g.i18n_locale = "zh_CN"
+```
+
+英文环境直接使用英文原文，不加载词表和 adapter：
+
+```lua
+vim.g.i18n_locale = "en_US" -- 或 en_UK
+```
+
+临时关闭 I18N 适配：
 
 ```lua
 vim.g.i18n_enabled = false
-```
-
-或在 `init.lua` 加载 `i18n` 前指定语言：
-
-```lua
-vim.g.i18n_locale = "en"
 ```
 
 ## 常用快捷键
 
 | 快捷键 | 功能 |
 | --- | --- |
-| `<leader>fc` | 打开 Neovim 配置目录，默认预选 `init.lua` |
+| `<leader>fc` | 切换到 Neovim 配置目录并打开 `init.lua` |
 | `<leader>cf` | 格式化当前 buffer |
 | `<leader>-` | 用 Yazi 打开当前文件所在目录 |
 | `<leader>cw` | 用 Yazi 打开工作目录 |
