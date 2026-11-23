@@ -113,6 +113,7 @@ clangd 和 clang-format 的共享配置会通过 `lua/utils/clangd.lua` 软链�
 - blink.cmp 提供 LSP、path、snippets、buffer 补全。
 - 额外启用 [Avante](https://github.com/yetone/avante.nvim)、colorful-menu、blink-cmp-words。
 - Avante 使用 OpenCode ACP（`opencode acp`），API Key 只从 `OPENCODE_API_KEY` 等环境变量读取。
+- Avante 默认启用；在 `lua/config/options.lua` 设置 `opts.ai.avante = false` 可关闭。
 - `snippets/` 中的 VSCode 风格片段由 blink.cmp 自动加载。
 
 ### 文件与界面
