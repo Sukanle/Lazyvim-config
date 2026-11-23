@@ -136,6 +136,9 @@ return {
         "MeanderingProgrammer/render-markdown.nvim",
         ft = { "markdown", "Avante" },
         opts = {
+            latex = {
+                converter = { "utftex", "latex2text" },
+            },
             overrides = {
                 filetype = {
                     markdown = {

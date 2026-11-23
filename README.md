@@ -12,6 +12,9 @@
 - lldb-dap
 - Zig 0.17.x、zig-analyzer
 - 可选：fish（`platform.lua` 会依次尝试 fish、zsh、bash）
+- 可选：[libtexprintf](https://github.com/bartp5/libtexprintf)（提供 `utftex`，用于将 LaTeX 转换为 Unicode）
+- 可选：[pylatexenc](https://pypi.org/project/pylatexenc/)（提供 `latex2text`，作为 LaTeX 转换的回退）
+- render-markdown 的 Treesitter 增强：`html`、`latex`、`yaml`（`treesitter.lua` 会自动安装）
 - Nerd Font（图标显示）
 
 ## 安装
@@ -53,7 +56,7 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │   ├── plugins/
 │   │   ├── lspconfig.lua        # LSP：clangd / rust-analyzer / zig-analyzer / lua_ls
 │   │   ├── conform.lua          # 格式化：clang-format / rustfmt
-│   │   ├── treesitter.lua       # Treesitter 额外 parser
+│   │   ├── treesitter.lua       # Treesitter 额外 parser（zig/html/latex/yaml）
 │   │   ├── blink.cmp.lua        # 补全
 │   │   ├── which-key.lua        # which-key 边框
 │   │   ├── colorful-winsep.lua  # 活动窗口圆角边框
