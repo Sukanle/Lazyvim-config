@@ -160,7 +160,11 @@ lua/plugins/snacks.lua
   - `keymap.lua`：拦截 `nvim_set_keymap` / `nvim_buf_set_keymap`，翻译快捷键 `desc`
   - `which-key.lua`：包装 `which-key.view.replace` 和 `which-key.text.append`
   - `snacks.lua`：包装 picker 标题模板和 dashboard 渲染
+  - `lualine.lua`：包装 `lualine.utils.mode.get_mode`，翻译 NORMAL / COMMAND 等模式名
 - `locales/zh_CN/`：按模块分布式管理词表，可以继续添加 `.lua` 文件，加载时自动合并。
+  - `ui.lua`：模式名等内置 UI 文本
+  - `keymaps.lua`：快捷键描述
+  - `which-key.lua` / `snacks.lua`：插件适配词表
 
 新增词条时，在 `locales/xx_YY/` 下任意文件里添加映射即可：
 
