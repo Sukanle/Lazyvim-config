@@ -6,5 +6,6 @@ vim.g.lazy_download_async = true
 vim.g.lazy_install_async = true
 
 require("config.platform")
+require("i18n").setup()
 
 require("config.lazy")

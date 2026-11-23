@@ -1,0 +1,21 @@
+-- which-key 分组名（LazyVim 的 group 字段）
+return {
+    ["tabs"] = "标签页",
+    ["code"] = "代码",
+    ["debug"] = "调试",
+    ["profiler"] = "性能分析",
+    ["file/find"] = "文件/查找",
+    ["git"] = "Git",
+    ["hunks"] = "代码块",
+    ["quit/session"] = "退出/会话",
+    ["search"] = "搜索",
+    ["ui"] = "界面",
+    ["diagnostics/quickfix"] = "诊断/快速修复",
+    ["prev"] = "上一个",
+    ["next"] = "下一个",
+    ["goto"] = "跳转",
+    ["surround"] = "环绕",
+    ["fold"] = "折叠",
+    ["buffer"] = "缓冲区",
+    ["windows"] = "窗口",
+}

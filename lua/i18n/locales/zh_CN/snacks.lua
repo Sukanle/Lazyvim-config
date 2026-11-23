@@ -1,0 +1,48 @@
+-- Snacks 仪表盘、picker、通知等界面文本
+return {
+    -- 仪表盘
+    ["Find File"] = "查找文件",
+    ["New File"] = "新建文件",
+    ["Find Text"] = "查找文本",
+    ["Recent Files"] = "最近文件",
+    ["Config"] = "配置",
+    ["Restore Session"] = "恢复会话",
+    ["Lazy Extras"] = "Lazy 扩展",
+    ["Quit"] = "退出",
+
+    -- Picker 标题/来源
+    ["Files"] = "文件",
+    ["Grep"] = "文本搜索",
+    ["Buffers"] = "缓冲区",
+    ["Recent"] = "最近",
+    ["Projects"] = "项目",
+    ["Commands"] = "命令",
+    ["Help Pages"] = "帮助页",
+    ["Keymaps"] = "快捷键",
+    ["Diagnostics"] = "诊断",
+    ["Symbols"] = "符号",
+    ["Git Branches"] = "Git 分支",
+    ["Git Log"] = "Git 日志",
+    ["Git Status"] = "Git 状态",
+    ["Git Stash"] = "Git 暂存",
+    ["Git Diff"] = "Git 差异",
+    ["GitHub Issues"] = "GitHub Issue",
+    ["GitHub Pull Requests"] = "GitHub PR",
+    ["Notifications"] = "通知",
+    ["Registers"] = "寄存器",
+    ["Marks"] = "标记",
+    ["Jumps"] = "跳转列表",
+    ["Undotree"] = "撤销树",
+    ["Colorschemes"] = "配色方案",
+    ["Search History"] = "搜索历史",
+    ["Command History"] = "命令历史",
+    ["Location List"] = "位置列表",
+    ["Quickfix List"] = "快速修复列表",
+    ["Lazy"] = "Lazy 插件",
+    ["Resume"] = "继续",
+
+    -- 通知/其他
+    ["Dismiss All"] = "全部忽略",
+    ["Dismiss All Notifications"] = "忽略所有通知",
+    ["Snacks Picker"] = "Snacks 选择器",
+}
