@@ -57,6 +57,7 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │   │   ├── treesitter.lua       # Treesitter 额外 parser
 │   │   ├── blink.cmp.lua        # 补全
 │   │   ├── which-key.lua        # which-key 边框
+│   │   ├── colorful-winsep.lua  # 活动窗口圆角边框
 │   │   ├── dap.lua              # DAP adapter 与 launch 配置
 │   │   ├── dap-ui.lua           # DAP UI / 虚拟文本
 │   │   ├── avante.lua           # AI 助手
@@ -129,6 +130,7 @@ clangd 和 clang-format 的共享配置会通过 `lua/utils/file_sync.lua` 软�
 - 纵向分屏：`fillchars.vert = "│"`
 - 分屏交叉点：`┴`、`┬`、`┤`、`├`、`┼`
 - lualine / bufferline：使用 `│` 分隔
+- 活动窗口：`colorful-winsep.nvim` 在窗口边界绘制 `╭─╮` 圆角边框
 - which-key：单独启用 `border = "rounded"`
 - Lazy 插件管理 / LazyExtras：`lazy.nvim` 的 `ui.border = "rounded"`，并使用 `backdrop = false`
 - Snacks picker、Blink、LSP hover 等继承 `winborder`
@@ -141,6 +143,7 @@ lua/config/lazy.lua
 lua/plugins/lualine.lua
 lua/plugins/bufferline.lua
 lua/plugins/which-key.lua
+lua/plugins/colorful-winsep.lua
 ```
 
 ### I18N 适配
