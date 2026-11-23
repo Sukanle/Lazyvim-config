@@ -63,8 +63,7 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │   │   ├── yazi.lua             # 文件管理器
 │   │   ├── bufferline.lua       # buffer 标签栏
 │   │   ├── lualine.lua          # 状态栏
-│   │   ├── noice.lua            # Noice cmdline 标题本地化 / notify 后端
-│   │   ├── notify.lua           # nvim-notify 动画通知
+│   │   ├── notifications.lua    # Noice + nvim-notify
 │   │   └── transparent.lua      # 透明背景
 │   ├── i18n/
 │   │   ├── init.lua             # locale 检测、词表加载、tr()
@@ -72,6 +71,7 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │   │   ├── adapters/            # 按插件拆分的独立适配器
 │   │   └── locales/zh_CN/       # 分布式中文词表
 │   └── utils/
+│       ├── clangd.lua           # clangd / clang-format 路径与软链接
 │       └── file_sync.lua        # 软链接同步工具
 ├── share/
 │   ├── clang-extern-tools/      # 共享的 clangd / clang-format 配置
@@ -98,7 +98,7 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 | Zig | zig-analyzer | `zig` / `zon`，使用 `build.zig` / `.git` 作为项目根 |
 | Lua | lua_ls | 通过 Mason 安装，包含 xmake 定义 |
 
-clangd 和 clang-format 的共享配置会通过 `lua/utils/file_sync.lua` 软链接到 `~/.config/clangd/`。
+clangd 和 clang-format 的共享配置会通过 `lua/utils/clangd.lua` 软链接到 `~/.config/clangd/`。
 
 ### 调试
 
@@ -165,7 +165,7 @@ lua/plugins/snacks.lua
   - `which-key.lua`：包装 `which-key.view.replace` 和 `which-key.text.append`
   - `snacks.lua`：包装 picker 标题模板和 dashboard 渲染
 - `lualine` 的模式名通过 `lualine_a.fmt` 翻译，保持原始 `get_mode()` 供主题选择颜色
-- `noice` 的 cmdline 标题在 `lua/plugins/noice.lua` 中本地化
+- `noice` 的 cmdline 标题在 `lua/plugins/notifications.lua` 中本地化
 - `locales/zh_CN/`：按模块分布式管理词表，可以继续添加 `.lua` 文件，加载时自动合并。
   - `ui.lua`：模式名等内置 UI 文本
   - `keymaps.lua`：快捷键描述
