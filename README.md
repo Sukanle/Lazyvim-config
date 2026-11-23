@@ -63,7 +63,8 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │   │   ├── yazi.lua             # 文件管理器
 │   │   ├── bufferline.lua       # buffer 标签栏
 │   │   ├── lualine.lua          # 状态栏
-│   │   ├── noice.lua            # Noice cmdline 标题本地化
+│   │   ├── noice.lua            # Noice cmdline 标题本地化 / notify 后端
+│   │   ├── notify.lua           # nvim-notify 动画通知
 │   │   └── transparent.lua      # 透明背景
 │   ├── i18n/
 │   │   ├── init.lua             # locale 检测、词表加载、tr()
@@ -118,6 +119,7 @@ clangd 和 clang-format 的共享配置会通过 `lua/utils/file_sync.lua` 软�
 - Yazi：`<leader>-` 打开当前文件所在目录，`<leader>cw` 打开工作目录。
 - bufferline + snacks picker + lualine。
 - 状态栏有意保持极简，`lualine_c` 和 `lualine_x` 留空。
+- Noice 通知改用 `nvim-notify` 后端，使用 `fade_in_slide_out` 动画。
 - 配色使用 LazyVim 默认的 tokyonight moon。
 - 透明背景通过 transparent.nvim 处理。
 
