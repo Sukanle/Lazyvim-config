@@ -56,6 +56,7 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │   │   ├── conform.lua          # 格式化：clang-format / rustfmt
 │   │   ├── treesitter.lua       # Treesitter 额外 parser
 │   │   ├── blink.cmp.lua        # 补全
+│   │   ├── which-key.lua        # which-key 边框
 │   │   ├── dap.lua              # DAP adapter 与 launch 配置
 │   │   ├── dap-ui.lua           # DAP UI / 虚拟文本
 │   │   ├── avante.lua           # AI 助手
@@ -119,6 +120,27 @@ clangd 和 clang-format 的共享配置会通过 `lua/utils/file_sync.lua` 软�
 - 配色使用 LazyVim 默认的 tokyonight moon。
 - 透明背景通过 transparent.nvim 处理。
 
+### 边界与分隔符
+
+统一使用 cmdline 风格的圆角边框和线条分隔：
+
+- 浮动窗口：`winborder = "rounded"`，使用 `╭─╮` / `╰─╯`
+- 横向分屏：`fillchars.horiz = "─"`
+- 纵向分屏：`fillchars.vert = "│"`
+- 分屏交叉点：`┴`、`┬`、`┤`、`├`、`┼`
+- lualine / bufferline：使用 `│` 分隔
+- which-key：单独启用 `border = "rounded"`
+- Snacks picker、Blink、LSP hover 等继承 `winborder`
+
+对应配置在：
+
+```text
+lua/config/options.lua
+lua/plugins/lualine.lua
+lua/plugins/bufferline.lua
+lua/plugins/which-key.lua
+```
+
 ### I18N 适配
 
 `lua/i18n/` 是一个轻量本地化层，使用 `英文原文 -> 译文` 模式：
@@ -136,10 +158,40 @@ clangd 和 clang-format 的共享配置会通过 `lua/utils/file_sync.lua` 软�
 
 新增词条时，在 `locales/xx_YY/` 下任意文件里添加映射即可：
 
+```text
+locales/xx_YY/
+├── ui.lua                       # 内置UI词表
+├── keymaps.lua                  # 内置快捷键词表
+└── <plugins-adapters>.lua       # 插件(需注册adapters)专用词表
+```
+
+1. `Lazyvim/Neovim` 内置UI:
+
 ```lua
 -- 简体中文示例
+-- lua/i18n/locales/zh_CN/ui.lua
 return {
     ["Find Files"] = "查找文件",
+}
+```
+
+2. `Lazyvim/Neovim` 内置快捷键:
+
+```lua
+-- 简体中文示例
+-- lua/i18n/locales/zh_CN/keymad.lua
+return {
+    ["Find Files"] = "查找文件",
+}
+```
+
+3. 插件(需注册adapters)专用词表:
+
+```lua
+-- 简体中文示例
+-- lua/i18n/locales/zh_CN/which-key.lua
+return {
+    ["tabs"] = "标签页",
 }
 ```
 
