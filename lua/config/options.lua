@@ -10,6 +10,16 @@ opt.shiftwidth = 4
 opt.softtabstop = 4
 opt.wrap = true
 opt.winborder = "rounded"
+-- Use box-drawing characters for split borders, matching floating windows.
+opt.fillchars:append({
+    horiz = "─",
+    horizup = "┴",
+    horizdown = "┬",
+    vert = "│",
+    vertleft = "┤",
+    vertright = "├",
+    verthoriz = "┼",
+})
 opt.fileencodings = {
     "utf-8",
     "ucs-bom",
