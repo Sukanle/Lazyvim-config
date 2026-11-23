@@ -35,6 +35,10 @@ require("lazy").setup({
         enabled = true, -- check for plugin updates periodically
         notify = false, -- notify on update
     }, -- automatically check for plugin updates
+    ui = {
+        border = "rounded",
+        backdrop = false,
+    },
     -- concurrency = (vim.g.os == "Windows") and 1 or nil,
     git = {
         timeout = 300, -- 克隆超时时间（秒）
