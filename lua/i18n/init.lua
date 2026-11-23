@@ -2,7 +2,8 @@
 --
 -- Design:
 --   * `locales/<locale>/` contains distributed dictionaries (English -> translation).
---   * `patches/` contains invasive patches for plugins without an i18n hook.
+--   * `adapters/` contains independent hooks for plugins without an i18n API.
+--   * `hooks.lua` provides the generic watch/wrap interface used by adapters.
 --   * Missing entries fall back to the original English text.
 --
 -- Locale resolution order:
@@ -129,8 +130,8 @@ function M.translate_fields(value, fields)
     return value
 end
 
----Load the current locale and install all patches.
----@param opts? { locale?: string, keymaps?: boolean, patches?: boolean }
+---Load the current locale and install all adapters.
+---@param opts? { locale?: string, adapters?: boolean, patches?: boolean }
 function M.setup(opts)
     opts = opts or {}
 
@@ -148,11 +149,16 @@ function M.setup(opts)
         load_locale(M.locale:match("^([^_]+)") or "")
     end
 
-    if opts.patches ~= false then
-        require("i18n.patches").setup(M)
+    if opts.patches ~= false and opts.adapters ~= false then
+        local hooks = require("i18n.hooks")
+        hooks.start()
+        require("i18n.adapters").setup(M, hooks)
     end
 
     return M
 end
+
+-- Alias matching the common `i18n.translate(text, domain)` convention.
+M.translate = M.tr
 
 return M

@@ -58,7 +58,6 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │   │   ├── blink.cmp.lua        # 补全
 │   │   ├── dap.lua              # DAP adapter 与 launch 配置
 │   │   ├── dap-ui.lua           # DAP UI / 虚拟文本
-│   │   ├── i18n.lua             # which-key / Snacks 的 i18n 钩子
 │   │   ├── avante.lua           # AI 助手
 │   │   ├── yazi.lua             # 文件管理器
 │   │   ├── bufferline.lua       # buffer 标签栏
@@ -66,8 +65,9 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │   │   └── transparent.lua      # 透明背景
 │   ├── i18n/
 │   │   ├── init.lua             # locale 检测、词表加载、tr()
-│   │   ├── locales/zh_CN/       # 分布式中文词表
-│   │   └── patches/             # 侵入式插件补丁
+│   │   ├── hooks.lua            # 通用 watch/wrap hook 接口
+│   │   ├── adapters/            # 按插件拆分的独立适配器
+│   │   └── locales/zh_CN/       # 分布式中文词表
 │   └── utils/
 │       └── file_sync.lua        # 软链接同步工具
 ├── share/
@@ -124,11 +124,15 @@ clangd 和 clang-format 的共享配置会通过 `lua/utils/file_sync.lua` 软�
 `lua/i18n/` 是一个轻量本地化层，参考 `~/.config/hypr/locales` 的“英文原文 -> 译文”模式：
 
 - `init.lua`：按 `vim.g.i18n_locale` > `LC_ALL` > `LC_MESSAGES` > `LANG` 选择语言，加载词表，提供 `require("i18n").tr()`。
-- `locales/zh_CN/`：按模块分布式管理词表，可以继续添加 `.lua` 文件，加载时自动合并。
-- `patches/`：侵入式修改没有 i18n 接口的插件，目前包括：
+- `hooks.lua`：通用 hook 接口：
+  - `hooks.watch(module, callback)`：等模块被真正加载后再执行回调，不会提前 `require` 插件
+  - `hooks.wrap(module, method, make)`：包装插件方法，并自动记录撤销函数
+  - `hooks.stop()`：撤销所有 hook
+- `adapters/`：每个插件一个独立适配器，自动发现并注册。目前包括：
   - `keymap.lua`：拦截 `nvim_set_keymap` / `nvim_buf_set_keymap`，翻译快捷键 `desc`
-  - `which-key.lua`：翻译 which-key 的分组名，并包装 `wk.add()`
-  - `snacks.lua`：翻译 Snacks 仪表盘、picker 标题等
+  - `which-key.lua`：包装 `which-key.view.replace` 和 `which-key.text.append`
+  - `snacks.lua`：包装 picker 标题模板和 dashboard 渲染
+- `locales/zh_CN/`：按模块分布式管理词表，可以继续添加 `.lua` 文件，加载时自动合并。
 
 新增词条时，在 `locales/zh_CN/` 下任意文件里添加映射即可：
 
@@ -138,7 +142,25 @@ return {
 }
 ```
 
-未命中的词条自动回退英文。新增语言时创建 `locales/<locale>/` 目录即可，例如 `locales/en/`。
+新增插件适配器时，在 `adapters/` 下创建独立文件：
+
+```lua
+-- lua/i18n/adapters/my-plugin.lua
+return {
+    setup = function(i18n, hooks)
+        hooks.watch("my-plugin.view", function(view)
+            hooks.wrap(view, "render", function(original)
+                return function(...)
+                    local text = original(...)
+                    return i18n.tr(text)
+                end
+            end)
+        end)
+    end,
+}
+```
+
+没有对应词条时自动回退英文。新增语言时创建 `locales/<locale>/` 目录即可，例如 `locales/en/`。
 
 临时关闭中文适配：
 
