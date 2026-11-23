@@ -1,5 +1,8 @@
+local enabled = not (opts and opts.ai and opts.ai.avante == false)
+
 return {
     "yetone/avante.nvim",
+    enabled = enabled,
     build = vim.fn.has("win32") ~= 0 and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
         or "make",
     event = "VeryLazy",

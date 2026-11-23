@@ -2,6 +2,11 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
 
+-- Feature switches shared by plugin specs.
+-- Set `opts.ai.avante = false` to disable Avante.
+opts = opts or {}
+opts.ai = vim.tbl_deep_extend("force", { avante = true }, opts.ai or {})
+
 -- Tabstop
 local opt = vim.opt
 opt.expandtab = true
