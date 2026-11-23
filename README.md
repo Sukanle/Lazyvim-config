@@ -130,12 +130,14 @@ clangd 和 clang-format 的共享配置会通过 `lua/utils/file_sync.lua` 软�
 - 分屏交叉点：`┴`、`┬`、`┤`、`├`、`┼`
 - lualine / bufferline：使用 `│` 分隔
 - which-key：单独启用 `border = "rounded"`
+- Lazy 插件管理 / LazyExtras：`lazy.nvim` 的 `ui.border = "rounded"`，并使用 `backdrop = false`
 - Snacks picker、Blink、LSP hover 等继承 `winborder`
 
 对应配置在：
 
 ```text
 lua/config/options.lua
+lua/config/lazy.lua
 lua/plugins/lualine.lua
 lua/plugins/bufferline.lua
 lua/plugins/which-key.lua
