@@ -6,8 +6,10 @@
 --   * `hooks.lua` provides the generic watch/wrap interface used by adapters.
 --   * Missing entries fall back to the original English text.
 --
--- Locale resolution order:
---   vim.g.i18n_locale > LC_ALL > LC_MESSAGES > LANG
+-- Locale resolution:
+--   `opts.locale` > `vim.g.i18n_locale` > "auto"
+--   "auto" checks LC_ALL > LC_MESSAGES > LANG.
+-- English locales (en, en_US, en_UK, C, POSIX) skip dictionaries and adapters.
 -- `zh_CN.UTF-8` is normalized to `zh_CN`; `zh_CN` falls back to `zh`.
 
 local M = {
@@ -21,12 +23,8 @@ local function notify(message, level)
 end
 
 local function env_locale()
-    local value = vim.g.i18n_locale
-    if type(value) == "string" and value ~= "" then
-        return value
-    end
     for _, name in ipairs({ "LC_ALL", "LC_MESSAGES", "LANG" }) do
-        value = vim.env[name]
+        local value = vim.env[name]
         if type(value) == "string" and value ~= "" then
             return value
         end
@@ -36,6 +34,22 @@ end
 
 local function normalize_locale(locale)
     return (locale or ""):gsub("[%.@].*$", "")
+end
+
+local function configured_locale(opts)
+    local value = opts.locale
+    if type(value) ~= "string" or value == "" or value == "auto" then
+        value = vim.g.i18n_locale
+    end
+    if type(value) ~= "string" or value == "" then
+        value = "auto"
+    end
+    return value
+end
+
+local function is_english(locale)
+    local name = locale:lower()
+    return name == "c" or name == "posix" or name == "en" or name:match("^en[_%-]") ~= nil
 end
 
 local function add_entries(prefix, part)
@@ -139,8 +153,14 @@ function M.setup(opts)
         return M
     end
 
-    M.locale = normalize_locale(opts.locale or env_locale())
+    local requested = configured_locale(opts)
+    M.locale = normalize_locale(requested == "auto" and env_locale() or requested)
     if M.locale == "" then
+        return M
+    end
+
+    -- English locales use the original strings; skip dictionary loading and hooks.
+    if is_english(M.locale) then
         return M
     end
 
