@@ -64,6 +64,7 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │   │   ├── bufferline.lua       # buffer 标签栏
 │   │   ├── lualine.lua          # 状态栏
 │   │   ├── notifications.lua    # Noice + nvim-notify
+│   │   ├── render-markdown.lua  # Markdown 只读预览与跟随
 │   │   └── transparent.lua      # 透明背景
 │   ├── i18n/
 │   │   ├── init.lua             # locale 检测、词表加载、tr()
@@ -124,6 +125,7 @@ Rust 的 `'`（生命周期）在 `after/ftplugin/rust.lua` 中禁用 mini.pairs
 - 状态栏有意保持极简，`lualine_c` 和 `lualine_x` 留空。
 - Noice 通知改用 `nvim-notify` 后端，使用 `fade_in_slide_out` 动画。
 - `nvim-notify` 的 `Notify*Body` / `NotifyBackground` 背景在 `transparent.lua` 中清空，保持通知透明。
+- Markdown 源文件默认不渲染；`<leader>md` 打开右侧只读预览，并跟随活动 Markdown buffer。
 - 配色使用 LazyVim 默认的 tokyonight moon。
 - 透明背景通过 transparent.nvim 处理。
 
@@ -262,6 +264,7 @@ vim.g.i18n_enabled = false
 | 快捷键 | 功能 |
 | --- | --- |
 | `<leader>fc` | 切换到 Neovim 配置目录并打开 `init.lua` |
+| `<leader>md` | 用 render-markdown 在垂直分屏预览 Markdown（只读、跟随活动 Markdown buffer） |
 | `<leader>cf` | 格式化当前 buffer |
 | `<leader>-` | 用 Yazi 打开当前文件所在目录 |
 | `<leader>cw` | 用 Yazi 打开工作目录 |

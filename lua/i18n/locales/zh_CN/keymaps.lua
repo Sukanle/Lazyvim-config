@@ -94,6 +94,7 @@ return {
     ["Location List (Trouble)"] = "位置列表 (Trouble)",
     ["Man Pages"] = "手册页",
     ["Marks"] = "标记",
+    ["Markdown Preview (render-markdown)"] = "Markdown 预览 (render-markdown)",
     ["Move Down"] = "下移",
     ["Move Up"] = "上移",
     ["Move buffer next"] = "下一个缓冲区",
