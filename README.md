@@ -58,11 +58,16 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │   │   ├── blink.cmp.lua        # 补全
 │   │   ├── dap.lua              # DAP adapter 与 launch 配置
 │   │   ├── dap-ui.lua           # DAP UI / 虚拟文本
+│   │   ├── i18n.lua             # which-key / Snacks 的 i18n 钩子
 │   │   ├── avante.lua           # AI 助手
 │   │   ├── yazi.lua             # 文件管理器
 │   │   ├── bufferline.lua       # buffer 标签栏
 │   │   ├── lualine.lua          # 状态栏
 │   │   └── transparent.lua      # 透明背景
+│   ├── i18n/
+│   │   ├── init.lua             # locale 检测、词表加载、tr()
+│   │   ├── locales/zh_CN/       # 分布式中文词表
+│   │   └── patches/             # 侵入式插件补丁
 │   └── utils/
 │       └── file_sync.lua        # 软链接同步工具
 ├── share/
@@ -113,6 +118,39 @@ clangd 和 clang-format 的共享配置会通过 `lua/utils/file_sync.lua` 软�
 - 状态栏有意保持极简，`lualine_c` 和 `lualine_x` 留空。
 - 配色使用 LazyVim 默认的 tokyonight moon。
 - 透明背景通过 transparent.nvim 处理。
+
+### 中文适配
+
+`lua/i18n/` 是一个轻量本地化层，参考 `~/.config/hypr/locales` 的“英文原文 -> 译文”模式：
+
+- `init.lua`：按 `vim.g.i18n_locale` > `LC_ALL` > `LC_MESSAGES` > `LANG` 选择语言，加载词表，提供 `require("i18n").tr()`。
+- `locales/zh_CN/`：按模块分布式管理词表，可以继续添加 `.lua` 文件，加载时自动合并。
+- `patches/`：侵入式修改没有 i18n 接口的插件，目前包括：
+  - `keymap.lua`：拦截 `nvim_set_keymap` / `nvim_buf_set_keymap`，翻译快捷键 `desc`
+  - `which-key.lua`：翻译 which-key 的分组名，并包装 `wk.add()`
+  - `snacks.lua`：翻译 Snacks 仪表盘、picker 标题等
+
+新增词条时，在 `locales/zh_CN/` 下任意文件里添加映射即可：
+
+```lua
+return {
+    ["Find Files"] = "查找文件",
+}
+```
+
+未命中的词条自动回退英文。新增语言时创建 `locales/<locale>/` 目录即可，例如 `locales/en/`。
+
+临时关闭中文适配：
+
+```lua
+vim.g.i18n_enabled = false
+```
+
+或在 `init.lua` 加载 `i18n` 前指定语言：
+
+```lua
+vim.g.i18n_locale = "en"
+```
 
 ## 常用快捷键
 
