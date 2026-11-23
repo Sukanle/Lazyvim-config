@@ -3,7 +3,6 @@
 个人 Neovim 配置，基于 [LazyVim](https://github.com/LazyVim/LazyVim)，面向 C/C++、Rust、Zig 和 Lua 开发。
 
 当前环境：Neovim 0.12.6 / LazyVim 16。
-
 ## 环境要求
 
 - Neovim >= 0.11.2
@@ -178,7 +177,7 @@ locales/xx_YY/
 -- 简体中文示例
 -- lua/i18n/locales/zh_CN/ui.lua
 return {
-    ["Find Files"] = "查找文件",
+    ["Normal"] = "普通模式",
 }
 ```
 
