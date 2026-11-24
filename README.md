@@ -7,7 +7,7 @@
 
 - Neovim >= 0.11.2
 - git、ripgrep、fd、tree-sitter-cli
-- clangd、clang-format
+- clice（`paru -S clice-bin`，C/C++ LSP、诊断与格式化；项目需提供 `compile_commands.json`）
 - rust-analyzer、rustfmt
 - lldb-dap
 - Zig 0.17.x、zig-analyzer
@@ -60,8 +60,8 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │   │   ├── keymaps.lua          # 自定义快捷键
 │   │   └── autocmds.lua         # 自定义自动命令
 │   ├── plugins/
-│   │   ├── lspconfig.lua        # LSP：clangd / rust-analyzer / zig-analyzer / emmylua_ls / ty
-│   │   ├── conform.lua          # 格式化：clang-format / rustfmt / prettier / cmakefmt / ruff / luafmt
+│   │   ├── lspconfig.lua        # LSP：clice / rust-analyzer / zig-analyzer / emmylua_ls / ty
+│   │   ├── conform.lua          # 格式化：rustfmt / prettier / cmakefmt / ruff / luafmt
 │   │   ├── linting.lua          # Lua linter：emmylua_check
 │   │   ├── treesitter.lua       # Treesitter 额外 parser（zig/html/latex/yaml）
 │   │   ├── blink.cmp.lua        # 补全
@@ -82,10 +82,10 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │   │   ├── adapters/            # 按插件拆分的独立适配器
 │   │   └── locales/zh_CN/       # 分布式中文词表
 │   └── utils/
-│       ├── clangd.lua           # clangd / clang-format 路径与软链接
+│       ├── clangd.lua           # 旧 clangd 配置同步工具（当前未启用）
 │       └── file_sync.lua        # 软链接同步工具
 ├── share/
-│   ├── clang-extern-tools/      # 共享的 clangd / clang-format 配置
+│   ├── clang-extern-tools/      # 共享 clangd / .clang-format 配置（clangd 已停用）
 │   └── lua-language-server/     # LLS-Addons 子模块（xmake 补全）
 └── snippets/                    # VSCode 风格代码片段
 ```
@@ -104,13 +104,15 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 
 | 语言 | Server | 说明 |
 | --- | --- | --- |
-| C/C++ | clangd | 使用 `share/clang-extern-tools/config.yaml`，compile commands 目录为 `build` |
+| C/C++ | clice | 系统安装（`paru -S clice-bin`），需要 `compile_commands.json`；诊断与格式化均由 clice 提供 |
 | Rust | rust-analyzer | 开启 clippy、allFeatures、proc macro |
 | Zig | zig-analyzer | `zig` / `zon`，使用 `build.zig` / `.git` 作为项目根 |
 | Lua | emmylua_ls | 通过 cargo 安装，LuaJIT runtime，包含 xmake 定义 |
 | Python | ty | 通过 `uv tool install ty` 安装，`ty server` 提供补全、hover、跳转；诊断由 `ty check` 提供 |
 
-clangd 和 clang-format 的共享配置会通过 `lua/utils/clangd.lua` 软链接到 `~/.config/clangd/`。
+`clangd` 已禁用，由 `clice` 接管 C/C++ 的补全、hover、跳转、诊断和格式化。
+`clice` 会从项目根目录或其中直接子目录查找 `compile_commands.json`，根标记为
+`clice.toml`、`compile_commands.json`、`.git`。
 Rust 的 `'`（生命周期）在 `after/ftplugin/rust.lua` 中禁用 mini.pairs 自动配对。
 Lua 的 `lua_ls` 已禁用，由 `emmylua_ls` 接管补全、hover、代码操作等能力。
 
@@ -125,7 +127,7 @@ Neovim API（`vim.*`）只在当前仓库生效：根目录的 `.emmyrc.json` �
 
 | 文件类型 | 工具 |
 | --- | --- |
-| C / C++ | `clang-format` |
+| C / C++ | `clice`（LSP `textDocument/formatting`） |
 | Rust | `rustfmt` |
 | Zig | `zig fmt` |
 | Markdown | `prettier` |
@@ -135,6 +137,10 @@ Neovim API（`vim.*`）只在当前仓库生效：根目录的 `.emmyrc.json` �
 | Lua | `luafmt`（`emmylua_formatter`） |
 
 `vim.g.autoformat = false`，因此保存时不会自动格式化，需要手动执行 `<leader>cf`。
+
+C/C++ 没有配置 conform formatter，`<leader>cf` 会回退到 LSP 格式化，由 clice 调用其内置 clang-format 完成。
+clice 使用文件所在目录向上最近的 `.clang-format`；当前项目根目录已有该文件。
+`clice lint` 可对项目运行 clang-tidy，但它是全项目扫描，没有接入 `nvim-lint`。
 
 Python 的诊断由 `ty check` 通过 `nvim-lint` 提供（`--output-format gitlab`），
 并根据 buffer 路径自动定位 `pyproject.toml` / `ty.toml` 作为 `--project`。

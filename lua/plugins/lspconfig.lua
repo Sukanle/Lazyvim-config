@@ -1,13 +1,4 @@
-local clangd_cmd = {
-    "clangd",
-    "--background-index",
-    "--clang-tidy",
-    "--compile-commands-dir=build",
-}
-
-local clangd = require("utils.clangd")
-clangd.setup()
-
+-- lua/plugins/lspconfig.lua
 return {
     {
         "neovim/nvim-lspconfig",
@@ -15,9 +6,9 @@ return {
         opts = {
             inlay_hints = { enabled = false },
             servers = {
-                clangd = {
+                clangd = { enabled = false },
+                clice = {
                     mason = false,
-                    cmd = clangd_cmd,
                 },
                 rust_analyzer = {
                     mason = false,
