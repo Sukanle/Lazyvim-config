@@ -11,6 +11,10 @@
 - rust-analyzer、rustfmt
 - lldb-dap
 - Zig 0.17.x、zig-analyzer
+- emmylua：`cargo install emmylua_ls emmylua_check emmylua_formatter`（分别提供 `emmylua_ls`、`emmylua_check`、`luafmt`）
+- prettier（Markdown / JSON 格式化）
+- ruff（Python 格式化）
+- cmakefmt（CMake 格式化）
 - 可选：fish（`platform.lua` 会依次尝试 fish、zsh、bash）
 - 可选：[libtexprintf](https://github.com/bartp5/libtexprintf)（提供 `utftex`，用于将 LaTeX 转换为 Unicode）
 - 可选：[pylatexenc](https://pypi.org/project/pylatexenc/)（提供 `latex2text`，作为 LaTeX 转换的回退）
@@ -54,8 +58,9 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │   │   ├── keymaps.lua          # 自定义快捷键
 │   │   └── autocmds.lua         # 自定义自动命令
 │   ├── plugins/
-│   │   ├── lspconfig.lua        # LSP：clangd / rust-analyzer / zig-analyzer / lua_ls
-│   │   ├── conform.lua          # 格式化：clang-format / rustfmt
+│   │   ├── lspconfig.lua        # LSP：clangd / rust-analyzer / zig-analyzer / emmylua_ls
+│   │   ├── conform.lua          # 格式化：clang-format / rustfmt / prettier / cmakefmt / ruff / luafmt
+│   │   ├── linting.lua          # Lua linter：emmylua_check
 │   │   ├── treesitter.lua       # Treesitter 额外 parser（zig/html/latex/yaml）
 │   │   ├── blink.cmp.lua        # 补全
 │   │   ├── which-key.lua        # which-key 边框
@@ -100,10 +105,29 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 | C/C++ | clangd | 使用 `share/clang-extern-tools/config.yaml`，compile commands 目录为 `build` |
 | Rust | rust-analyzer | 开启 clippy、allFeatures、proc macro |
 | Zig | zig-analyzer | `zig` / `zon`，使用 `build.zig` / `.git` 作为项目根 |
-| Lua | lua_ls | 通过 Mason 安装，包含 xmake 定义 |
+| Lua | emmylua_ls | 通过 cargo 安装，LuaJIT runtime，包含 xmake 定义 |
 
 clangd 和 clang-format 的共享配置会通过 `lua/utils/clangd.lua` 软链接到 `~/.config/clangd/`。
 Rust 的 `'`（生命周期）在 `after/ftplugin/rust.lua` 中禁用 mini.pairs 自动配对。
+Lua 的 `lua_ls` 已禁用，由 `emmylua_ls` 接管补全、hover、代码操作等能力。
+
+### 格式化与检查
+
+| 文件类型 | 工具 |
+| --- | --- |
+| C / C++ | `clang-format` |
+| Rust | `rustfmt` |
+| Zig | `zig fmt` |
+| Markdown | `prettier` |
+| CMake | `cmakefmt` |
+| Python | `ruff`（organize imports + format） |
+| JSON | `prettier` |
+| Lua | `luafmt`（`emmylua_formatter`） |
+
+`vim.g.autoformat = false`，因此保存时不会自动格式化，需要手动执行 `<leader>cf`。
+
+Lua 的诊断由 `emmylua_check` 通过 `nvim-lint` 提供（在 BufReadPost / InsertLeave / BufWritePost 触发）。
+`emmylua_ls` 自身的诊断已关闭，避免与 `emmylua_check` 产生重复条目；LSP 仍负责补全、hover、跳转和代码操作。
 
 ### 调试
 

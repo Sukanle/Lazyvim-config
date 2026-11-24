@@ -1,17 +1,23 @@
--- lua/plugins/formatter.lua
+-- lua/plugins/conform.lua
 local clangd = require("utils.clangd")
 clangd.setup()
 
 return {
     {
         "stevearc/conform.nvim",
-        optional = true,
+        -- optional = true,
         opts = {
             formatters_by_ft = {
                 ["c"] = { "clang_format" },
                 ["cpp"] = { "clang_format" },
                 ["c++"] = { "clang_format" },
-                ["rust"] = { "rustfmt" }, -- 新增
+                ["rust"] = { "rustfmt" },
+                ["zig"] = { "zig" },
+                ["markdown"] = { "prettier" },
+                ["cmake"] = { "cmakefmt" },
+                ["python"] = { "ruff_organize_imports", "ruff_format" },
+                ["json"] = { "prettier" },
+                ["lua"] = { "luafmt" },
             },
             formatters = {
                 clang_format = {
@@ -33,6 +39,22 @@ return {
                         -- 回退到默认（-style=file 会自动搜索，但为了明确性也可保留）
                         return { "-style=file" }
                     end,
+                },
+                zig = {
+                    command = "zig",
+                    args = function()
+                        return { "fmt" }
+                    end,
+                },
+                cmakefmt = {
+                    command = "cmakefmt",
+                    args = { "-" },
+                    stdin = true,
+                },
+                luafmt = {
+                    command = "luafmt",
+                    args = { "--stdin", "--stdin-filename", "$FILENAME", "--level", "lua-jit" },
+                    stdin = true,
                 },
             },
         },

@@ -45,20 +45,26 @@ return {
                         ["zig-analyzer"] = vim.empty_dict(),
                     },
                 },
-                lua_ls = {
-                    mason = true,
+                lua_ls = { enabled = false },
+                emmylua_ls = {
+                    mason = false,
                     settings = {
-                        Lua = {
+                        emmylua = {
+                            runtime = { version = "LuaJIT" },
+                            diagnostics = {
+                                -- Diagnostics come from `emmylua_check` via nvim-lint
+                                -- to avoid duplicated entries.
+                                enable = false,
+                                globals = { "vim", "xmake", "target", "set_kind", "add_files" },
+                            },
                             workspace = {
                                 library = {
+                                    vim.env.VIMRUNTIME,
                                     vim.fn.expand(
-                                        vim.g.home .. "/share/lua-language-server/LLS-Addons/addons/xmake/module/library"
+                                        vim.g.home
+                                            .. "/share/lua-language-server/LLS-Addons/addons/xmake/module/library"
                                     ),
                                 },
-                                checkThirdParty = false,
-                            },
-                            diagnostics = {
-                                globals = { "xmake", "target", "set_kind", "add_files" },
                             },
                         },
                     },
