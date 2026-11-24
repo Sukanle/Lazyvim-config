@@ -1,0 +1,51 @@
+#:schema https://docs.clice.io/clice-config.schema.json
+
+# Migrated from config.yaml (clangd) for clice.
+#
+# clice reads this file only as `clice.toml` in a project root, or as
+# `.clice/config.toml`. Copy or symlink it into the project, for example:
+#
+#   mkdir -p .clice
+#   ln -sf ~/.config/nvim/share/cpp-analyzer/config.toml .clice/config.toml
+#
+# `Diagnostics: ClangTidy` has no equivalent in clice.toml: clice reads the
+# nearest `.clang-tidy` for clang-tidy checks. `clang_tidy` below only turns
+# the clang-tidy pass on or off.
+
+[documentation]
+# Documentation: CommentFormat: Doxygen
+format = "doxygen"
+
+[diagnostics]
+clang_tidy = true
+
+[code_completion]
+# Completion: AllScopes: No
+all_scopes = false
+# Completion: ArgumentLists: None
+arguments = "none"
+# Completion: HeaderInsertion: Never
+insert_includes = false
+insert_imports = false
+
+# C++ sources and headers.
+[[rules]]
+patterns = ["**/*.cpp", "**/*.cxx", "**/*.cc", "**/*.hpp"]
+append = ["-std=c++20"]
+
+# C sources.
+[[rules]]
+patterns = ["**/*.c"]
+append = ["-std=c23"]
+
+# Common flags from the unconditional clangd fragment.
+# clangd `Compiler: clang++` has no clice equivalent; clice queries the
+# compiler named by each compile command.
+[[rules]]
+append = [
+    "-Wall",
+    "-Wextra",
+    "-Wno-unused-parameter",
+    "-Iinclude",
+]
+remove = ["-m*", "-f*"]

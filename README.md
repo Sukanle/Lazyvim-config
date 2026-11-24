@@ -85,7 +85,10 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │       ├── clangd.lua           # 旧 clangd 配置同步工具（当前未启用）
 │       └── file_sync.lua        # 软链接同步工具
 ├── share/
-│   ├── clang-extern-tools/      # 共享 clangd / .clang-format 配置（clangd 已停用）
+│   ├── cpp-analyzer/            # 共享 C/C++ 配置
+│   │   ├── .clang-format        # clang-format / clice 格式化风格
+│   │   ├── config.toml          # clice 配置（复制/软链到项目 .clice/）
+│   │   └── config.yaml          # clangd 回退配置
 │   └── lua-language-server/     # LLS-Addons 子模块（xmake 补全）
 └── snippets/                    # VSCode 风格代码片段
 ```
@@ -113,6 +116,23 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 `clangd` 已禁用，由 `clice` 接管 C/C++ 的补全、hover、跳转、诊断和格式化。
 `clice` 会从项目根目录或其中直接子目录查找 `compile_commands.json`，根标记为
 `clice.toml`、`compile_commands.json`、`.git`。
+
+共享 C/C++ 配置位于 `share/cpp-analyzer/`：
+
+- `.clang-format`：clang-format / clice 的格式化风格
+- `config.toml`：clice 配置，由 `config.yaml` 迁移而来
+- `config.yaml`：保留的 clangd 回退配置
+
+clice 只读取项目根目录的 `clice.toml` 或 `.clice/config.toml`，因此共享配置需要复制或软链到项目：
+
+```sh
+mkdir -p .clice
+ln -sf ~/.config/nvim/share/cpp-analyzer/config.toml .clice/config.toml
+```
+
+`clangd` 的 `Diagnostics: ClangTidy` 检查项无法写入 `clice.toml`，clice 使用项目最近的 `.clang-tidy`；
+`config.toml` 中的 `[diagnostics] clang_tidy` 只负责开关 clang-tidy。
+
 Rust 的 `'`（生命周期）在 `after/ftplugin/rust.lua` 中禁用 mini.pairs 自动配对。
 Lua 的 `lua_ls` 已禁用，由 `emmylua_ls` 接管补全、hover、代码操作等能力。
 

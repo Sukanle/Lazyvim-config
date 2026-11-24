@@ -3,7 +3,7 @@ local M = {}
 
 local file_sync = require("utils.file_sync")
 
-M.share_dir = vim.fs.joinpath(vim.g.home, "share", "clang-extern-tools")
+M.share_dir = vim.fs.joinpath(vim.g.home, "share", "cpp-analyzer")
 
 if vim.g.os.sysname == "Windows_NT" then
     M.home_dir = vim.fs.joinpath(vim.env.LOCALAPPDATA, "clangd")
