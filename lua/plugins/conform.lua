@@ -5,6 +5,10 @@ return {
         -- optional = true,
         opts = {
             formatters_by_ft = {
+                -- Prefer clice's LSP formatting; fall back to clang-format
+                -- when no C/C++ LSP with formatting support is attached.
+                ["c"] = { "clang-format", lsp_format = "prefer" },
+                ["cpp"] = { "clang-format", lsp_format = "prefer" },
                 ["rust"] = { "rustfmt" },
                 ["zig"] = { "zig" },
                 ["markdown"] = { "prettier" },

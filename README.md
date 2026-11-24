@@ -8,6 +8,7 @@
 - Neovim >= 0.11.2
 - git、ripgrep、fd、tree-sitter-cli
 - clice（`paru -S clice-bin`，C/C++ LSP、诊断与格式化；项目需提供 `compile_commands.json`）
+- clang-format（clice 不可用时的 C/C++ 格式化回退）
 - rust-analyzer、rustfmt
 - lldb-dap
 - Zig 0.17.x、zig-analyzer
@@ -147,7 +148,7 @@ Neovim API（`vim.*`）只在当前仓库生效：根目录的 `.emmyrc.json` �
 
 | 文件类型 | 工具 |
 | --- | --- |
-| C / C++ | `clice`（LSP `textDocument/formatting`） |
+| C / C++ | `clice`（LSP `textDocument/formatting`），回退 `clang-format` |
 | Rust | `rustfmt` |
 | Zig | `zig fmt` |
 | Markdown | `prettier` |
@@ -158,7 +159,14 @@ Neovim API（`vim.*`）只在当前仓库生效：根目录的 `.emmyrc.json` �
 
 `vim.g.autoformat = false`，因此保存时不会自动格式化，需要手动执行 `<leader>cf`。
 
-C/C++ 没有配置 conform formatter，`<leader>cf` 会回退到 LSP 格式化，由 clice 调用其内置 clang-format 完成。
+C/C++ 使用 per-filetype 的 `lsp_format = "prefer"`：`<leader>cf` 优先使用 clice 的 LSP 格式化；
+当没有可用的格式化 LSP 客户端时，回退到 conform 的 `clang-format`。
+
+```lua
+["c"] = { "clang-format", lsp_format = "prefer" },
+["cpp"] = { "clang-format", lsp_format = "prefer" },
+```
+
 clice 使用文件所在目录向上最近的 `.clang-format`；当前项目根目录已有该文件。
 `clice lint` 可对项目运行 clang-tidy，但它是全项目扫描，没有接入 `nvim-lint`。
 
