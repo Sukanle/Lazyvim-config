@@ -41,6 +41,12 @@ return {
                 fallback = "mini",
             })
 
+            -- LSP hover (`K`) inherits Noice's popup view but defaults to no
+            -- border. This preset adds the rounded border to hover docs and
+            -- signature help.
+            opts.presets = opts.presets or {}
+            opts.presets.lsp_doc_border = true
+
             local i18n = require("i18n")
             for name, label in pairs(titles) do
                 local format = opts.cmdline.format[name]
