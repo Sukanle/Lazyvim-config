@@ -1,4 +1,15 @@
--- lua/plugins/lspconfig.lua
+-- lua/plugins/coding/lspconfig.lua
+local clangd_cmd = {
+    "clangd",
+    "--background-index",
+    "--clang-tidy",
+    "--compile-commands-dir=build",
+}
+
+local has_clice = vim.fn.executable("clice") == 1
+-- Keep the shared clangd fallback configuration in sync.
+require("utils.clangd").setup()
+
 return {
     {
         "neovim/nvim-lspconfig",
@@ -6,10 +17,8 @@ return {
         opts = {
             inlay_hints = { enabled = false },
             servers = {
-                clangd = { enabled = false },
-                clice = {
-                    mason = false,
-                },
+                clice = { enabled = has_clice, mason = false },
+                clangd = has_clice and { enabled = false } or { mason = false, cmd = clangd_cmd },
                 rust_analyzer = {
                     mason = false,
                     settings = {

@@ -1,4 +1,4 @@
--- lua/plugins/linting.lua
+-- lua/plugins/coding/linting.lua
 -- Use EmmyLua's checker for Lua and ty's checker for Python.
 
 -- Analyze from the project root so `require` paths resolve and the project's

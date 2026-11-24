@@ -8,6 +8,7 @@
 - Neovim >= 0.11.2
 - git、ripgrep、fd、tree-sitter-cli
 - clice（`paru -S clice-bin`，C/C++ LSP、诊断与格式化；项目需提供 `compile_commands.json`）
+- clangd（clice 不在 PATH 时的 C/C++ LSP 回退）
 - clang-format（clice 不可用时的 C/C++ 格式化回退）
 - rust-analyzer、rustfmt
 - lldb-dap
@@ -61,29 +62,36 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │   │   ├── keymaps.lua          # 自定义快捷键
 │   │   └── autocmds.lua         # 自定义自动命令
 │   ├── plugins/
-│   │   ├── lspconfig.lua        # LSP：clice / rust-analyzer / zig-analyzer / emmylua_ls / ty
-│   │   ├── conform.lua          # 格式化：rustfmt / prettier / cmakefmt / ruff / luafmt
-│   │   ├── linting.lua          # Lua linter：emmylua_check
-│   │   ├── treesitter.lua       # Treesitter 额外 parser（zig/html/latex/yaml）
-│   │   ├── blink.cmp.lua        # 补全
-│   │   ├── which-key.lua        # which-key 边框
-│   │   ├── colorful-winsep.lua  # 活动窗口圆角边框
-│   │   ├── dap.lua              # DAP adapter 与 launch 配置
-│   │   ├── dap-ui.lua           # DAP UI / 虚拟文本
-│   │   ├── avante.lua           # AI 助手
-│   │   ├── yazi.lua             # 文件管理器
-│   │   ├── bufferline.lua       # buffer 标签栏
-│   │   ├── lualine.lua          # 状态栏
-│   │   ├── notifications.lua    # Noice + nvim-notify
-│   │   ├── render-markdown.lua  # Markdown 只读预览与跟随
-│   │   └── transparent.lua      # 透明背景
+│   │   ├── ai/
+│   │   │   └── avante.lua           # AI 助手
+│   │   ├── coding/
+│   │   │   ├── blink.lua            # 补全
+│   │   │   ├── conform.lua          # 格式化
+│   │   │   ├── linting.lua          # emmylua_check / ty_check
+│   │   │   ├── lspconfig.lua        # LSP：clice（回退 clangd）/ rust-analyzer / zig-analyzer / emmylua_ls / ty
+│   │   │   └── treesitter.lua       # Treesitter 额外 parser（zig/html/latex/yaml）
+│   │   ├── dap/
+│   │   │   ├── dap.lua              # DAP adapter 与 launch 配置
+│   │   │   └── dap-ui.lua           # DAP UI / 虚拟文本
+│   │   ├── markdown/
+│   │   │   └── render-markdown.lua  # Markdown 只读预览与跟随
+│   │   ├── tools/
+│   │   │   └── yazi.lua             # 文件管理器
+│   │   └── ui/
+│   │       ├── bufferline.lua       # buffer 标签栏
+│   │       ├── colorful-winsep.lua  # 活动窗口圆角边框
+│   │       ├── lualine.lua          # 状态栏
+│   │       ├── notifications.lua    # Noice + nvim-notify
+│   │       ├── snacks.lua           # picker / UI
+│   │       ├── transparent.lua      # 透明背景
+│   │       └── which-key.lua        # which-key 边框
 │   ├── i18n/
 │   │   ├── init.lua             # locale 检测、词表加载、tr()
 │   │   ├── hooks.lua            # 通用 watch/wrap hook 接口
 │   │   ├── adapters/            # 按插件拆分的独立适配器
 │   │   └── locales/zh_CN/       # 分布式中文词表
 │   └── utils/
-│       ├── clangd.lua           # 旧 clangd 配置同步工具（当前未启用）
+│       ├── clangd.lua           # clangd 回退配置同步工具
 │       └── file_sync.lua        # 软链接同步工具
 ├── share/
 │   ├── cpp-analyzer/            # 共享 C/C++ 配置
@@ -108,13 +116,15 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 
 | 语言 | Server | 说明 |
 | --- | --- | --- |
-| C/C++ | clice | 系统安装（`paru -S clice-bin`），需要 `compile_commands.json`；诊断与格式化均由 clice 提供 |
+| C/C++ | clice | 系统安装（`paru -S clice-bin`），需要 `compile_commands.json`；诊断与格式化均由 clice 提供；`clice` 不在 PATH 时回退 clangd |
 | Rust | rust-analyzer | 开启 clippy、allFeatures、proc macro |
 | Zig | zig-analyzer | `zig` / `zon`，使用 `build.zig` / `.git` 作为项目根 |
 | Lua | emmylua_ls | 通过 cargo 安装，LuaJIT runtime，包含 xmake 定义 |
 | Python | ty | 通过 `uv tool install ty` 安装，`ty server` 提供补全、hover、跳转；诊断由 `ty check` 提供 |
 
-`clangd` 已禁用，由 `clice` 接管 C/C++ 的补全、hover、跳转、诊断和格式化。
+`clangd` 默认禁用，由 `clice` 接管 C/C++ 的补全、hover、跳转、诊断和格式化。
+启动时如果 `clice` 不在 PATH，会自动启用 `clangd` 作为回退，并调用
+`lua/utils/clangd.lua` 把 `share/cpp-analyzer/config.yaml` 同步到 `~/.config/clangd/`。
 `clice` 会从项目根目录或其中直接子目录查找 `compile_commands.json`，根标记为
 `clice.toml`、`compile_commands.json`、`.git`。
 
@@ -159,7 +169,7 @@ Neovim API（`vim.*`）只在当前仓库生效：根目录的 `.emmyrc.json` �
 
 `vim.g.autoformat = false`，因此保存时不会自动格式化，需要手动执行 `<leader>cf`。
 
-C/C++ 使用 per-filetype 的 `lsp_format = "prefer"`：`<leader>cf` 优先使用 clice 的 LSP 格式化；
+C/C++ 使用 per-filetype 的 `lsp_format = "prefer"`：`<leader>cf` 优先使用 clice（或回退时的 clangd）的 LSP 格式化；
 当没有可用的格式化 LSP 客户端时，回退到 conform 的 `clang-format`。
 
 ```lua
@@ -226,11 +236,11 @@ Lua 的诊断由 `emmylua_check` 通过 `nvim-lint` 提供（在 BufReadPost / I
 ```text
 lua/config/options.lua
 lua/config/lazy.lua
-lua/plugins/lualine.lua
-lua/plugins/bufferline.lua
-lua/plugins/which-key.lua
-lua/plugins/colorful-winsep.lua
-lua/plugins/snacks.lua
+lua/plugins/ui/lualine.lua
+lua/plugins/ui/bufferline.lua
+lua/plugins/ui/which-key.lua
+lua/plugins/ui/colorful-winsep.lua
+lua/plugins/ui/snacks.lua
 ```
 
 ### I18N 适配
@@ -247,7 +257,7 @@ lua/plugins/snacks.lua
   - `which-key.lua`：包装 `which-key.view.replace` 和 `which-key.text.append`
   - `snacks.lua`：包装 picker 标题模板和 dashboard 渲染
 - `lualine` 的模式名通过 `lualine_a.fmt` 翻译，保持原始 `get_mode()` 供主题选择颜色
-- `noice` 的 cmdline 标题在 `lua/plugins/notifications.lua` 中本地化
+- `noice` 的 cmdline 标题在 `lua/plugins/ui/notifications.lua` 中本地化
 - `locales/zh_CN/`：按模块分布式管理词表，可以继续添加 `.lua` 文件，加载时自动合并。
   - `ui.lua`：模式名等内置 UI 文本
   - `keymaps.lua`：快捷键描述
@@ -363,3 +373,7 @@ vim.g.i18n_enabled = false
 ```
 
 配置按模块拆分在 `lua/config` 和 `lua/plugins` 下，新增功能时优先放到独立模块，避免单个文件持续膨胀。
+
+`lua/plugins/` 按目录分组（`ai`、`coding`、`dap`、`markdown`、`tools`、`ui`），
+每组在 `lua/config/lazy.lua` 中通过 `{ import = "plugins.<group>" }` 导入。
+新增分组目录时，需要同步添加对应的 import。

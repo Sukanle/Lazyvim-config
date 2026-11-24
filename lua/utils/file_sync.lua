@@ -8,8 +8,13 @@ return {
             return false
         end
 
-        if vim.uv.fs_readlink(det) == src then
+        local current = vim.uv.fs_readlink(det)
+        if current == src then
             return true
+        elseif current then
+            -- Repoint an existing symlink, including one whose target was
+            -- moved or deleted.
+            vim.uv.fs_unlink(det)
         elseif not target or not target.mtime.sec then
             vim.notify("Create symlink...", vim.log.levels.INFO)
         elseif source.mtime.sec > target.mtime.sec then
