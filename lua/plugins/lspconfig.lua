@@ -58,6 +58,18 @@ return {
                 },
                 ty = {
                     mason = false,
+                    handlers = {
+                        -- ty dynamically registers pull diagnostics; drop that
+                        -- registration so `ty check` via nvim-lint is the only
+                        -- diagnostics source.
+                        ["client/registerCapability"] = function(_, params, ctx)
+                            params.registrations = vim.tbl_filter(function(reg)
+                                return reg.method ~= "textDocument/diagnostic"
+                            end, params.registrations or {})
+                            return vim.lsp.handlers["client/registerCapability"](nil, params, ctx)
+                        end,
+                        ["textDocument/publishDiagnostics"] = function() end,
+                    },
                 },
             },
         },
