@@ -50,22 +50,9 @@ return {
                     mason = false,
                     settings = {
                         emmylua = {
-                            runtime = { version = "LuaJIT" },
-                            diagnostics = {
-                                -- Diagnostics come from `emmylua_check` via nvim-lint
-                                -- to avoid duplicated entries.
-                                enable = false,
-                                globals = { "vim", "xmake", "target", "set_kind", "add_files" },
-                            },
-                            workspace = {
-                                library = {
-                                    vim.env.VIMRUNTIME,
-                                    vim.fn.expand(
-                                        vim.g.home
-                                            .. "/share/lua-language-server/LLS-Addons/addons/xmake/module/library"
-                                    ),
-                                },
-                            },
+                            -- Diagnostics come from `emmylua_check` via nvim-lint
+                            -- to avoid duplicated entries.
+                            diagnostics = { enable = false },
                         },
                     },
                 },

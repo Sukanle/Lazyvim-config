@@ -48,6 +48,7 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 ```text
 .
 ├── init.lua                     # 入口：全局开关、平台信息、lazy.nvim
+├── .emmyrc.json                 # EmmyLua 项目配置（$VIMRUNTIME / xmake）
 ├── lazyvim.json                 # 启用的 LazyVim extras
 ├── lazy-lock.json               # 插件版本锁
 ├── lua/
@@ -111,6 +112,13 @@ clangd 和 clang-format 的共享配置会通过 `lua/utils/clangd.lua` 软链�
 Rust 的 `'`（生命周期）在 `after/ftplugin/rust.lua` 中禁用 mini.pairs 自动配对。
 Lua 的 `lua_ls` 已禁用，由 `emmylua_ls` 接管补全、hover、代码操作等能力。
 
+Neovim API（`vim.*`）只在当前仓库生效：根目录的 `.emmyrc.json` 通过 `$VIMRUNTIME`
+把 Neovim runtime 作为 library，并加入 xmake 定义。其他 Lua 项目不会加载该 library，
+因此不会出现 `vim` 补全，也不会把 `vim` 当作已定义的全局变量。
+
+如果其他 Neovim 插件/配置项目也需要 `vim` API，在该项目根目录添加同样带
+`"library": ["$VIMRUNTIME"]` 的 `.emmyrc.json` 即可，不需要修改全局 LSP 配置。
+
 ### 格式化与检查
 
 | 文件类型 | 工具 |
@@ -127,6 +135,7 @@ Lua 的 `lua_ls` 已禁用，由 `emmylua_ls` 接管补全、hover、代码操�
 `vim.g.autoformat = false`，因此保存时不会自动格式化，需要手动执行 `<leader>cf`。
 
 Lua 的诊断由 `emmylua_check` 通过 `nvim-lint` 提供（在 BufReadPost / InsertLeave / BufWritePost 触发）。
+它以项目根为 workspace 运行，会读取该项目的 `.emmyrc.json`，因此 `vim` API 和 xmake 定义同样只在当前仓库生效。
 `emmylua_ls` 自身的诊断已关闭，避免与 `emmylua_check` 产生重复条目；LSP 仍负责补全、hover、跳转和代码操作。
 
 ### 调试

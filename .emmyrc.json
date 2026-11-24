@@ -1,0 +1,14 @@
+{
+    "runtime": {
+        "version": "LuaJIT"
+    },
+    "diagnostics": {
+        "globals": ["xmake", "target", "set_kind", "add_files"]
+    },
+    "workspace": {
+        "library": [
+            "$VIMRUNTIME",
+            "${workspaceFolder}/share/lua-language-server/LLS-Addons/addons/xmake/module/library"
+        ]
+    }
+}

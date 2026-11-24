@@ -1,29 +1,9 @@
 -- lua/plugins/linting.lua
 -- Use EmmyLua's checker as the Lua linter.
 
--- `emmylua_check` only auto-discovers `.emmyrc.json` from a workspace directory.
--- Since nvim-lint passes a single file, point it at a generated config that
--- provides the Neovim runtime library (required to resolve `vim.*` types).
-local function check_config()
-    local library = { vim.env.VIMRUNTIME }
-    local xmake = vim.fs.joinpath(vim.g.home, "share/lua-language-server/LLS-Addons/addons/xmake/module/library")
-    if vim.uv.fs_stat(xmake) then
-        library[#library + 1] = xmake
-    end
-
-    local path = vim.fs.joinpath(vim.fn.stdpath("cache"), "emmylua_check.json")
-    vim.fn.writefile({
-        vim.json.encode({
-            runtime = { version = "LuaJIT" },
-            diagnostics = { globals = { "xmake", "target", "set_kind", "add_files" } },
-            workspace = { library = library },
-        }),
-    }, path)
-    return path
-end
-
--- Analyze from the project root so `require` paths resolve; the parser keeps
--- only diagnostics for the current buffer.
+-- Analyze from the project root so `require` paths resolve and the project's
+-- `.emmyrc.json` is discovered. The parser keeps only diagnostics for the
+-- current buffer.
 local function check_root()
     local bufnr = vim.api.nvim_get_current_buf()
     local name = vim.api.nvim_buf_get_name(bufnr)
@@ -96,7 +76,7 @@ return {
                     cmd = "emmylua_check",
                     stdin = false,
                     append_fname = false,
-                    args = { "-c", check_config, "-f", "json", check_root },
+                    args = { "-f", "json", check_root },
                     ignore_exitcode = true,
                     condition = function(ctx)
                         return ctx.filename ~= ""
