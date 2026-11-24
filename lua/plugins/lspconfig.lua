@@ -56,6 +56,9 @@ return {
                         },
                     },
                 },
+                ty = {
+                    mason = false,
+                },
             },
         },
     },

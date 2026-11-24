@@ -14,6 +14,7 @@
 - emmylua：`cargo install emmylua_ls emmylua_check emmylua_formatter`（分别提供 `emmylua_ls`、`emmylua_check`、`luafmt`）
 - prettier（Markdown / JSON 格式化）
 - ruff（Python 格式化）
+- ty（Python 类型检查 / LSP）：`uv tool install ty`
 - cmakefmt（CMake 格式化）
 - 可选：fish（`platform.lua` 会依次尝试 fish、zsh、bash）
 - 可选：[libtexprintf](https://github.com/bartp5/libtexprintf)（提供 `utftex`，用于将 LaTeX 转换为 Unicode）
@@ -59,7 +60,7 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 │   │   ├── keymaps.lua          # 自定义快捷键
 │   │   └── autocmds.lua         # 自定义自动命令
 │   ├── plugins/
-│   │   ├── lspconfig.lua        # LSP：clangd / rust-analyzer / zig-analyzer / emmylua_ls
+│   │   ├── lspconfig.lua        # LSP：clangd / rust-analyzer / zig-analyzer / emmylua_ls / ty
 │   │   ├── conform.lua          # 格式化：clang-format / rustfmt / prettier / cmakefmt / ruff / luafmt
 │   │   ├── linting.lua          # Lua linter：emmylua_check
 │   │   ├── treesitter.lua       # Treesitter 额外 parser（zig/html/latex/yaml）
@@ -107,6 +108,7 @@ Zig Treesitter parser 会在首次启动时自动安装，也可以手动执行 
 | Rust | rust-analyzer | 开启 clippy、allFeatures、proc macro |
 | Zig | zig-analyzer | `zig` / `zon`，使用 `build.zig` / `.git` 作为项目根 |
 | Lua | emmylua_ls | 通过 cargo 安装，LuaJIT runtime，包含 xmake 定义 |
+| Python | ty | 通过 `uv tool install ty` 安装，`ty server` 同时提供补全和类型检查诊断 |
 
 clangd 和 clang-format 的共享配置会通过 `lua/utils/clangd.lua` 软链接到 `~/.config/clangd/`。
 Rust 的 `'`（生命周期）在 `after/ftplugin/rust.lua` 中禁用 mini.pairs 自动配对。
@@ -133,6 +135,9 @@ Neovim API（`vim.*`）只在当前仓库生效：根目录的 `.emmyrc.json` �
 | Lua | `luafmt`（`emmylua_formatter`） |
 
 `vim.g.autoformat = false`，因此保存时不会自动格式化，需要手动执行 `<leader>cf`。
+
+Python 的类型检查由 `ty` LSP 直接提供（`ty server`），与 `ty check` 使用同一套规则，
+因此没有再额外接入 `nvim-lint`，避免同一条诊断出现两次。
 
 Lua 的诊断由 `emmylua_check` 通过 `nvim-lint` 提供（在 BufReadPost / InsertLeave / BufWritePost 触发）。
 它以项目根为 workspace 运行，会读取该项目的 `.emmyrc.json`，因此 `vim` API 和 xmake 定义同样只在当前仓库生效。
